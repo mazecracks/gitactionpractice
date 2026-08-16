@@ -1,1 +1,8 @@
 find ~ -name "report.pdf"
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+git add .
+git commit -m "Initial commit"
+git branch -M main
+git push -u origin main
