@@ -11,3 +11,4 @@ venv/
 *.ipynb
 code.txtcode.txt
 code.txt
+actions-runner/
