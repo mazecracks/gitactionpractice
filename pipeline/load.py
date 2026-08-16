@@ -3,7 +3,6 @@ import os
 from dotenv import load_dotenv
 from sqlalchemy import URL, create_engine, text
 
-
 load_dotenv()
 
 
