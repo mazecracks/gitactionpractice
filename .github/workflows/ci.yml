@@ -1,15 +1,21 @@
-name: Data Pipeline CI
+name: Data Pipeline CI/CD
 
 on:
-  push:
-    branches:
-      - main
-
   pull_request:
     branches:
       - main
 
+  push:
+    branches:
+      - main
+
+
 jobs:
+
+  # -------------------------
+  # CI
+  # -------------------------
+
   test:
     runs-on: ubuntu-latest
 
@@ -34,3 +40,34 @@ jobs:
       - name: Run unit tests
         run: |
           pytest -v
+
+
+  # -------------------------
+  # CD
+  # -------------------------
+
+  deploy:
+    needs: test
+
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    runs-on: self-hosted
+
+    env:
+      DB_HOST: 127.0.0.1
+      DB_PORT: 5434
+      DB_NAME: sales_db
+      DB_USER: postgres
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Install dependencies
+        run: |
+          python -m pip install -r requirements.txt
+
+      - name: Run ETL pipeline
+        run: |
+          python main.py
